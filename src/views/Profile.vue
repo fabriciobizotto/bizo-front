@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="loggedIn">
+  <div class="container" v-if="isLoggedIn">
     <header class="jumbotron p-3 mb-2 mt-2">
       <h3 class="text-center">
         <strong>{{currentUser.first_name}}</strong>
@@ -29,7 +29,7 @@
 export default {
   name: 'Profile',
   computed: {
-    loggedIn() {
+    isLoggedIn() {
       return this.$store.getters['auth/isLoggedIn']
     },
     currentUser() {

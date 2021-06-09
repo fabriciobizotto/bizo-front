@@ -49,6 +49,13 @@ export const router = new Router({
       name: 'user',
       // lazy-loaded
       component: () => import('./views/BoardUser.vue')
+    },
+
+    {
+      path: '/accounts',
+      name: 'accounts',
+      // lazy-loaded
+      component: () => import('./views/Accounts.vue')
     }
   ]
 });
