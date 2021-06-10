@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header class="jumbotron">
-      <h3>Cervejas</h3>
+      <h3 class="text-primary">Cervejas</h3>
       <b-list-group>
         <b-list-group-item v-for="beer in content" :key="beer.id">
           {{beer.name}} - {{beer.abv}}
