@@ -7,7 +7,7 @@
       <b-row class="align-items-start">
         <b-col
           v-show="showForm"
-          :lg="showForm ? '6' : ''"
+          lg="12"
         >
           <b-card>
             <b-form
@@ -72,7 +72,7 @@
           </b-card>
         </b-col>
 
-        <b-col :lg="showForm ? '6' : '12'">
+        <b-col lg="12">
           <b-card footer-tag="footer">
             <div class="mb-2">
               <b-button

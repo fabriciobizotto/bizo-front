@@ -5,8 +5,8 @@ import store from './store';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-// import '@/assets/styles/_variables.scss'
-import '@/assets/styles/_bootstrap.scss'
+// import '@/assets/styles/_variables.scss';
+import '@/assets/styles/_bootstrap.scss';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -20,7 +20,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
-import i18n from '@/plugins/i18n'
+import i18n from '@/plugins/i18n';
 
 library.add(fas, faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
