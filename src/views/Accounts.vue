@@ -1,7 +1,26 @@
 <template>
   <div>
       <h1>Accounts</h1>
-        <p>{{lista}}</p>
+      <b-overlay :show="isLoading" rounded="sm">
+          <b-table striped :items="accountList" :fields="fields">
+              <template #cell(active)="data">
+                  <b-form-checkbox 
+                    class="text-center"
+                    @change="updateAccount(data.item)"
+                    v-model="data.item.active">
+                  </b-form-checkbox>
+                  <!-- <font-awesome-icon :icon="data.item.active ? 'check-square' : 'check-square'" /> -->
+              </template>
+
+              <template #cell(investment)="data">
+                  <b-form-checkbox 
+                    class="text-center"
+                    @change="updateAccount(data.item)"
+                    v-model="data.item.investment">
+                  </b-form-checkbox>
+              </template>
+          </b-table>
+      </b-overlay>
   </div>
 </template>
 
@@ -9,19 +28,23 @@
 import {mapActions, mapGetters} from 'vuex'
 export default {
     name: 'Account',
-    methods: {
-        ...mapActions(['fetchAll'])
+    data() {
+      return {
+        fields: [
+            {key: 'title', sortable: true},
+            {key: 'active', sortable: true},
+            {key: 'investment', sortable: true},
+        ],
+      }
     },
-    computed: 
-        mapGetters(['account/accountList'])
-    
-        // lista() {
-        //     return this.$store.state.account.accounts
-        // }
-    
-    ,
+    methods: {
+        ...mapActions(['accountAll', 'updateAccount'])
+    },
+    computed: {
+        ...mapGetters(['isLoading','accountList'])
+    },
     created() {
-        this.fetchAll()
+        this.accountAll()
         // this.$store.dispatch('account/fetchAll')
     }
 }

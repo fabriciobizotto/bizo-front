@@ -1,20 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios'
+// import axios from 'axios';
 
 import { auth } from './auth.module';
-import { AccountModule } from './account.module';
+import account from './modules/account';
 
 Vue.use(Vuex);
-Vue.prototype.$http = axios
+// Vue.prototype.$http = axios;
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  getters: {},
   modules: {
     auth,
-    AccountModule
+    account
   }
 });
