@@ -7,7 +7,15 @@ class AccountSerice {
     return axios.get(API_URL + 'accounts', { headers: authHeader() });
   }
 
-  addAccount(account) {}
+  addAccount(account) {
+    const { title, active, investment } = account;
+
+    return axios.post(
+      API_URL + `accounts`,
+      { title, active, investment },
+      { headers: authHeader() }
+    );
+  }
 
   updateAccount(account) {
     const { title, active, investment, id } = account;
@@ -17,6 +25,14 @@ class AccountSerice {
       { title, active, investment },
       { headers: authHeader() }
     );
+  }
+
+  deleteAccount(account) {
+    const { id } = account;
+
+    return axios.delete(API_URL + `accounts/${id}`, {
+      headers: authHeader()
+    });
   }
 }
 
