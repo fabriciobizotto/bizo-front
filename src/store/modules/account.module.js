@@ -2,20 +2,12 @@ import AccountService from '../../services/account.service';
 import Account from '../../models/account';
 
 const state = {
-  loading: false,
-  accounts: [],
-  message: {
-    showDismissibleAlert: false,
-    error: false,
-    text: null
-  }
+  accounts: []
 };
 
 const getters = {
-  message: state => state.message,
-  isLoading: state => state.loading,
-  accountList: state => state.accounts,
-  quantidade: state => state.accounts.length
+  accountList: state =>
+    state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1))
 };
 
 const actions = {
@@ -104,11 +96,11 @@ const mutations = {
   removeAccount: (state, payload) => {
     state.accounts = state.accounts.filter(item => item.id != payload.id);
   },
-  updateAccount: (state,  payload) => {
+  updateAccount: (state, payload) => {
     state.accounts = [
       ...state.accounts.filter(item => item.id !== payload.id),
       payload
-    ]
+    ];
   },
   setAccounts: (state, payload) => {
     state.accounts = payload;
@@ -126,7 +118,7 @@ const mutations = {
   }
 };
 export default {
-  //   namespaced: true,
+  namespaced: true,
   state,
   getters,
   actions,

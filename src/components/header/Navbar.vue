@@ -49,6 +49,13 @@
           class="nav-link"
         >Account</router-link>
       </li>
+      <li class="nav-item">
+        <router-link
+          v-if="currentUser"
+          to="tags"
+          class="nav-link"
+        >Tag</router-link>
+      </li>
     </div>
 
     <div
@@ -104,6 +111,7 @@ export default {
   name: 'Navbar',
   computed: {
     currentUser() {
+      console.log(this.$store.state.auth);
       return this.$store.state.auth.user;
     },
     showAdminBoard() {

@@ -4,6 +4,8 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 
+import AuthService from './services/auth.service';
+
 Vue.use(Router);
 
 export const router = new Router({
@@ -56,24 +58,41 @@ export const router = new Router({
       name: 'accounts',
       // lazy-loaded
       component: () => import('./views/Accounts.vue')
+    },
+    {
+      path: '/tags',
+      name: 'tags',
+      // lazy-loaded
+      component: () => import('./views/Tags.vue')
     }
   ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const publicPages = ['/login', '/register', '/home'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 
+  try {
+    // const response = await AuthService.verificarToken();
+    // console.log(response);
+    if (authRequired && !loggedIn) {
+      next('/login');
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
   // trying to access a restricted page + not logged in
   // redirect to login page
-  if (authRequired && !loggedIn) {
-    next('/login');
-  } else {
-    next();
-  }
+  // if (authRequired && !loggedIn) {
+  //   next('/login');
+  // } else {
+  //   next();
+  // }
 });
-
 
 // router.beforeEach((to, from, next) => {
 //   if(to.matched.some(record => record.meta.requiresAuth)) {

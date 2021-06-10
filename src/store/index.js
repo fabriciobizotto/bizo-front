@@ -2,15 +2,23 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 // import axios from 'axios';
 
-import { auth } from './auth.module';
-import account from './modules/account';
+import * as modules from './modules';
 
 Vue.use(Vuex);
 // Vue.prototype.$http = axios;
 
 export default new Vuex.Store({
-  modules: {
-    auth,
-    account
-  }
+  state: {
+    loading: false,
+    message: {
+      showDismissibleAlert: false,
+      error: false,
+      text: null
+    }
+  },
+  getters: {
+    message: state => state.message,
+    isLoading: state => state.loading
+  },
+  modules
 });
