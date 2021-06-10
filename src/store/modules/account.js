@@ -3,7 +3,6 @@ import Account from '../../models/account';
 
 const state = {
   loading: false,
-  account: new Account(),
   accounts: [],
   message: {
     showDismissibleAlert: false,
@@ -15,11 +14,8 @@ const state = {
 const getters = {
   message: state => state.message,
   isLoading: state => state.loading,
-  accountList: state => {
-    console.log(state);
-    return state.accounts;
-  },
-  account: state => state.account
+  accountList: state => state.accounts,
+  quantidade: state => state.accounts.length
 };
 
 const actions = {
@@ -36,10 +32,6 @@ const actions = {
     }
   },
 
-  editAccount({ commit }, account) {
-    commit('setAccount', account);
-  },
-
   async updateAccount({ commit }, account) {
     commit('reset');
     commit('setLoading');
@@ -48,7 +40,7 @@ const actions = {
       // const data = { ...account, active: !account.active };
       const response = await AccountService.updateAccount(account);
       // console.log(response);
-      commit('setAccount', new Account());
+      commit('updateAccount', response.data);
       commit('setSuccess', 'Conta atualizada com sucesso!');
     } catch (error) {
       // console.log(error);
@@ -111,6 +103,12 @@ const mutations = {
   },
   removeAccount: (state, payload) => {
     state.accounts = state.accounts.filter(item => item.id != payload.id);
+  },
+  updateAccount: (state,  payload) => {
+    state.accounts = [
+      ...state.accounts.filter(item => item.id !== payload.id),
+      payload
+    ]
   },
   setAccounts: (state, payload) => {
     state.accounts = payload;

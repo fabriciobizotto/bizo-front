@@ -1,43 +1,61 @@
 <template>
-  <div class="mt-2">
-    <div class="mb-2">
-        <b-button variant="outline-success" class="mr-1 float-right" @click="show(false)">
+  <b-card class="mt-2" footer-tag="footer">
+    <div class="mb-3">
+        <b-button variant="outline-success" class="mr-1 float-right" @click="show(false)" v-show="!showForm">
             <font-awesome-icon icon="plus-square" /> Nova
         </b-button>
-        <span class="h2">Contas</span>
+        <span class="h4 text-muted">Contas</span>
     </div>
     
     <b-overlay :show="isLoading" rounded="sm">
-        <b-card v-show="showForm">
-            <form name="form" @submit.prevent="submit">
-                <div class="form-group">
-                    <input
-                        id="title"
-                        ref="title"
-                        class="mb-2 mr-sm-2 mb-sm-0 form-control"
-                        placeholder="Ex. BB"
-                        name="title"
-                        v-validate="'required|min:3|max:20'"
-                        v-model="account.title"
-                    />
-                    <div v-if="submitted && errors.has('title')" class="text-danger">
-                        {{errors.first('title')}}
-                    </div>
-                </div>
+        <div v-show="showForm">
+            <b-form name="form" @submit.prevent="submit">
+                <b-row>
+                    <b-col sm="9">
+                        <b-form-input
+                            id="title"
+                            ref="title"
+                            class="mb-2 mr-sm-2 mb-sm-0 form-control"
+                            placeholder="Ex. BB"
+                            name="title"
+                            v-validate="'required|min:1|max:20'"
+                            v-model="account.title"
+                        ></b-form-input>
+                        <div v-if="submitted && errors.has('title')" class="text-danger">
+                            {{errors.first('title')}}
+                        </div>
+                    </b-col>
 
-                <b-form-checkbox v-model="account.active" class="">Ativa?</b-form-checkbox>
-                <b-form-checkbox v-model="account.investment" class="">Investimento?</b-form-checkbox>
+                    <b-col sm="3">
+                        <b-form-checkbox v-model="account.active" class="">Ativa?</b-form-checkbox>
+                        <b-form-checkbox v-model="account.investment" class="">Investimento?</b-form-checkbox>
+                    </b-col>
+                </b-row>
 
-                <b-button type="submit" class="mt-3" variant="dark">Salvar</b-button>
-            </form>
-        </b-card>
+                <b-row>
+                    <b-col>
 
-        <b-table striped 
-            :items="accountList" :fields="fields" sort-icon-left
+                        <b-button type="submit" class="mt-3" variant="dark">
+                            <font-awesome-icon icon="plus-square" /> Salvar
+                        </b-button>
+                        <b-button variant="outline-dark" class="mt-3 ml-1" @click="cancelEdit()"  v-show="showForm">
+                            <font-awesome-icon icon="minus-square" /> Cancelar
+                        </b-button>
+
+                    </b-col>
+
+                </b-row>
+            </b-form>
+        </div>
+
+        <b-table :items="accountList" :fields="fields" sort-icon-left
             :per-page="perPage"
-            :current-page="currentPage"
-            small
+            :current-page="currentPage" :filter="filter"
+            small striped show-empty head-variant="light"
             >
+            <template #empty="">
+                <em>{{ $t('table.emptyText') }}</em>
+            </template>
             <template #cell(active)="data">
                 <b-form-checkbox 
                     class="text-center"
@@ -57,7 +75,7 @@
 
              <template #cell(actions)="row">
                  <div class="float-right">
-                    <b-button size="sm" @click="editAccount(row.item) && show(true)" class="mr-1 btn btn-info">
+                    <b-button size="sm" @click="editAccount(row.item)" class="mr-1 btn btn-info">
                         Editar
                     </b-button>
                     <b-button size="sm" @click="deletarConta(row.item, row.index, $event.target)" class="mr-1 btn btn-danger">
@@ -66,28 +84,58 @@
                  </div>
             </template>
         </b-table>
-        <b-pagination
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
-            aria-controls="my-table"
-            ></b-pagination>
+        
     </b-overlay>
-  </div>
+
+    <template #footer>
+        <b-row>
+            <b-col cols="7">
+                <b-pagination
+                    size="sm"
+                    v-model="currentPage"
+                    :total-rows="quantidade"
+                    :per-page="perPage"
+                    aria-controls="my-table"
+                    ></b-pagination>
+            </b-col>
+            <b-col cols="5">
+                <b-form-group
+                label=""
+                label-for="filter-input"
+                label-align-sm="right"
+                label-size="sm"
+                class="mb-0"
+                >
+                <b-input-group size="sm">
+                    <b-form-input
+                        id="filter-input"
+                        v-model="filter"
+                        type="search"
+                        placeholder="Pesquisar..."
+                    ></b-form-input>
+                </b-input-group>
+                </b-form-group>
+            </b-col>
+        </b-row>
+    </template>
+  </b-card>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-
+import Account from '../models/account'
 export default {
     name: 'AccountPage',
     data() {
       return {
+        edited: null,
+        account: new Account(),
         submitted: false,
-        mensagem: '',
         showForm: false,
-        perPage: 10,
+        perPage: 5,
         currentPage: 1,
+        filter: null,
+        filterOn: [],
         fields: [
             {key: 'title', sortable: true, label: 'Conta'},
             {key: 'active', sortable: true, label: 'Status'},
@@ -97,7 +145,7 @@ export default {
       }
     },
     methods: {
-        ...mapActions(['accountAll', 'updateAccount', 'saveAccount', 'deletarConta', 'editAccount']),
+        ...mapActions(['accountAll', 'updateAccount', 'saveAccount', 'deletarConta']),
         show(mostrar = false) {
             console.log(mostrar);
             this.showForm = mostrar ? mostrar : !this.showForm
@@ -106,20 +154,17 @@ export default {
             })
         },
         submit() {
-            this.mensagem = '';
             this.submitted = true;
             this.$validator.validate().then(isValid => {
                 if (isValid) {
+                    console.log(this.account);
                     const metodo = this.account.id ? this.updateAccount : this.saveAccount
                     metodo(this.account).then(() => {
                         // this.message = data.message;
                         this.showForm = false;
                         this.submitted = false;
+                        this.account = new Account()
                     },error => {
-                        this.mensagem =
-                            (error.response && error.response.data && error.response.data.message) ||
-                            error.mensagem ||
-                            error.toString();
                         this.showForm = true;
                     });
                 } else {
@@ -128,13 +173,18 @@ export default {
                     })
                 }
             });
+        },
+        editAccount(item) {
+            this.account = {...item}
+            this.show(true)
+        },
+        cancelEdit() {
+            this.account = new Account()
+            this.show(false)
         }
     },
     computed: {
-        ...mapGetters(['isLoading','accountList', 'account']),
-        rows() {
-            return this.accountList.length
-        }
+        ...mapGetters(['isLoading','accountList', 'quantidade']),
     },
     created() {
         this.accountAll()
