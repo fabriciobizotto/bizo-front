@@ -181,8 +181,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('BaseModule');
+const { mapActions: mapActionsAccount, mapGetters: mapGettersAccount } =
+  createNamespacedHelpers('AccountModule');
 import Account from '../models/account';
+
 export default {
   name: 'AccountPage',
   data() {
@@ -204,7 +208,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions([
+    ...mapActionsAccount([
       'accountAll',
       'updateAccount',
       'saveAccount',
@@ -253,7 +257,8 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isLoading', 'accountList', 'quantidade']),
+    ...mapGetters(['isLoading']),
+    ...mapGettersAccount(['accountList', 'quantidade']),
   },
   created() {
     this.accountAll();

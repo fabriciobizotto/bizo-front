@@ -1,127 +1,109 @@
 import TagService from '../../services/tag.service';
 import Tag from '../../models/tag';
 
+import {
+  BASE_SET_LOADING,
+  BASE_SET_SUCCESS,
+  BASE_SET_ERROR,
+  BASE_RESET
+} from '../mutations.types';
+import { SET_TAGS, UPDATE_TAG, ADD_TAG, REMOVE_TAG } from '../mutations.types';
+
 const state = {
-  items: [],
-  loading: false,
-  message: {
-    showDismissibleAlert: false,
-    error: false,
-    text: null
-  }
+  items: []
 };
 
 const getters = {
-  message: state => state.message,
-  isLoading: state => state.loading,
   itemList: state => state.items.sort((a, b) => (a.title > b.title ? 1 : -1)),
   quantidade: state => state.items.length
 };
 
 const actions = {
   async itemAll({ commit }) {
-    commit('setLoading');
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       const response = await TagService.getAll();
-      commit('setitems', response.data);
+      commit(SET_TAGS, response.data);
     } catch (error) {
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async updateItem({ commit }, item) {
-    commit('reset');
-    commit('setLoading');
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       // const data = { ...item, active: !item.active };
       const response = await TagService.updateItem(item);
       // console.log(response);
-      commit('updateitem', response.data);
-      commit('setSuccess', 'Conta atualizada com sucesso!');
+      commit(UPDATE_TAG, response.data);
+      commit(BASE_SET_SUCCESS, 'Conta atualizada com sucesso!', {
+        root: true
+      });
     } catch (error) {
       // console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async saveItem({ commit }, item) {
     try {
-      commit('reset');
-      commit('setLoading');
+      commit(BASE_RESET, null, { root: true });
+      commit(BASE_SET_LOADING, null, { root: true });
       // const data = { ...item, active: !item.active };
       const response = await TagService.addItem(item);
-      commit('additem', response.data);
-      commit('setitem', new Tag());
-      commit('setSuccess', 'Conta criada com sucesso!');
+      commit(ADD_TAG, response.data);
+      commit(BASE_SET_SUCCESS, 'Conta criada com sucesso!', {
+        root: true
+      });
     } catch (error) {
-      console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async deletarItem({ commit }, item) {
-    commit('reset');
-    commit('setLoading');
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       // const data = { ...item, active: !item.active };
       const response = await TagService.deleteItem(item);
-      commit('removeitem', item);
-      commit('setSuccess', 'Conta removida com sucesso!');
+      commit(REMOVE_TAG, item);
+      commit(BASE_SET_SUCCESS, 'Conta removida com sucesso!', {
+        root: true
+      });
     } catch (error) {
       // console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   }
 };
 
 const mutations = {
-  reset: state => {
-    state.message.error = null;
-    state.message.showDismissibleAlert = false;
-    state.message.text = null;
+  [SET_TAGS](state, payload) {
+    state.items = payload;
   },
-  setLoading: state => {
-    state.loading = !state.loading;
-  },
-  setitem: (state, item) => {
-    state.item = item;
-  },
-  additem: (state, payload) => {
+  [ADD_TAG](state, payload) {
     state.items.push(payload);
   },
-  removeitem: (state, payload) => {
-    state.items = state.items.filter(item => item.id != payload.id);
-  },
-  updateitem: (state, payload) => {
+  [UPDATE_TAG](state, payload) {
     state.items = [
       ...state.items.filter(item => item.id !== payload.id),
       payload
     ];
   },
-  setitems: (state, payload) => {
-    state.items = payload;
-    state.message.error = false;
-  },
-  setError(state, payload) {
-    state.message.error = true;
-    state.message.showDismissibleAlert = true;
-    state.message.text = payload;
-  },
-  setSuccess(state, payload) {
-    state.message.error = false;
-    state.message.showDismissibleAlert = true;
-    state.message.text = payload;
+  [REMOVE_TAG](state, payload) {
+    state.items = state.items.filter(item => item.id != payload.id);
   }
 };
 export default {
@@ -131,15 +113,3 @@ export default {
   actions,
   mutations
 };
-
-// export const item = {
-//     namespaced: true,
-//     state: initialState,
-//     actions: {
-
-//     },
-//     getters: {},
-//     mutations: {
-
-//     },
-// }

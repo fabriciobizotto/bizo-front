@@ -1,120 +1,119 @@
 import AccountService from '../../services/account.service';
 import Account from '../../models/account';
 
+import {
+  BASE_SET_LOADING,
+  BASE_SET_SUCCESS,
+  BASE_SET_ERROR,
+  BASE_RESET
+} from '../mutations.types';
+import {
+  SET_ACCOUNTS,
+  UPDATE_ACCOUNT,
+  ADD_ACCOUNT,
+  REMOVE_ACCOUNT
+} from '../mutations.types';
+
 const state = {
   accounts: []
 };
 
 const getters = {
-  accountList: state =>
-    state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1))
+  accountList: state => {
+    console.log(state);
+    return state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1));
+  },
+  quantidade: state => state.accounts.length
 };
 
 const actions = {
   async accountAll({ commit }) {
-    commit('setLoading');
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       const response = await AccountService.getAccounts();
-      commit('setAccounts', response.data);
+      commit(SET_ACCOUNTS, response.data);
     } catch (error) {
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async updateAccount({ commit }, account) {
-    commit('reset');
-    commit('setLoading');
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       // const data = { ...account, active: !account.active };
       const response = await AccountService.updateAccount(account);
-      // console.log(response);
-      commit('updateAccount', response.data);
-      commit('setSuccess', 'Conta atualizada com sucesso!');
+      commit(UPDATE_ACCOUNT, response.data);
+      commit(BASE_SET_SUCCESS, 'Conta atualizada com sucesso!', {
+        root: true
+      });
     } catch (error) {
       // console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async saveAccount({ commit }, account) {
-    commit('reset');
-    commit('setLoading');
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       // const data = { ...account, active: !account.active };
       const response = await AccountService.addAccount(account);
-      commit('addAccount', response.data);
-      commit('setAccount', new Account());
-      commit('setSuccess', 'Conta criada com sucesso!');
+      state.accounts.push(response.data);
+      state.account = new Account();
+      commit(BASE_SET_SUCCESS, 'Conta criada com sucesso!', {
+        root: true
+      });
     } catch (error) {
       // console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
   async deletarConta({ commit }, account) {
-    commit('reset');
-    commit('setLoading');
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
 
     try {
       // const data = { ...account, active: !account.active };
       const response = await AccountService.deleteAccount(account);
-      commit('removeAccount', account);
-      commit('setSuccess', 'Conta removida com sucesso!');
+      state.accounts = state.accounts.filter(item => item.id != account.id);
+      commit(BASE_SET_SUCCESS, 'Conta removida com sucesso!', {
+        root: true
+      });
     } catch (error) {
       // console.log(error);
-      commit('setError', error);
+      commit(BASE_SET_ERROR, error, { root: true });
     } finally {
-      commit('setLoading');
+      commit(BASE_SET_LOADING, null, { root: true });
     }
   }
 };
 
 const mutations = {
-  reset: state => {
-    state.message.error = null;
-    state.message.showDismissibleAlert = false;
-    state.message.text = null;
+  [SET_ACCOUNTS](state, payload) {
+    state.accounts = payload;
   },
-  setLoading: state => {
-    state.loading = !state.loading;
-  },
-  setAccount: (state, account) => {
-    state.account = account;
-  },
-  addAccount: (state, payload) => {
+  [ADD_ACCOUNT](state, payload) {
     state.accounts.push(payload);
   },
-  removeAccount: (state, payload) => {
-    state.accounts = state.accounts.filter(item => item.id != payload.id);
-  },
-  updateAccount: (state, payload) => {
+  [UPDATE_ACCOUNT](state, payload) {
     state.accounts = [
       ...state.accounts.filter(item => item.id !== payload.id),
       payload
     ];
   },
-  setAccounts: (state, payload) => {
-    state.accounts = payload;
-    state.message.error = false;
-  },
-  setError(state, payload) {
-    state.message.error = true;
-    state.message.showDismissibleAlert = true;
-    state.message.text = payload;
-  },
-  setSuccess(state, payload) {
-    state.message.error = false;
-    state.message.showDismissibleAlert = true;
-    state.message.text = payload;
+  [REMOVE_ACCOUNT](state, payload) {
+    state.accounts = state.accounts.filter(item => item.id != payload.id);
   }
 };
 export default {
@@ -124,15 +123,3 @@ export default {
   actions,
   mutations
 };
-
-// export const account = {
-//     namespaced: true,
-//     state: initialState,
-//     actions: {
-
-//     },
-//     getters: {},
-//     mutations: {
-
-//     },
-// }

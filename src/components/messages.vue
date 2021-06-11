@@ -1,22 +1,24 @@
 <template>
-  <b-alert 
-    class="border-0" 
-    :variant="message.error ? 'danger' : 'success'" 
+  <b-alert
+    class="border-0"
+    :variant="message.error ? 'danger' : 'success'"
     :show="message.text != null"
     fade
-    dismissible>
-      {{message.text}}
+    dismissible
+  >
+    {{message.text}}
   </b-alert>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('BaseModule');
+
 export default {
-    name: 'Messages',
-    computed: mapGetters(['isLoading', 'message']),
-}
+  name: 'Messages',
+  computed: mapGetters(['isLoading', 'message']),
+};
 </script>
 
 <style>
-
 </style>

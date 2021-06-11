@@ -180,7 +180,9 @@
 import { createNamespacedHelpers } from 'vuex';
 import Tag from '../models/tag';
 
-const { mapActions, mapGetters } = createNamespacedHelpers('TagModule');
+const { mapGetters } = createNamespacedHelpers('BaseModule');
+const { mapActions: mapActionsTag, mapGetters: mapGettersTag } =
+  createNamespacedHelpers('TagModule');
 
 export default {
   name: 'TagPage',
@@ -202,7 +204,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['itemAll', 'updateItem', 'saveItem', 'deletarItem']),
+    ...mapActionsTag(['itemAll', 'updateItem', 'saveItem', 'deletarItem']),
     show(mostrar = false) {
       console.log(mostrar);
       this.showForm = mostrar ? mostrar : !this.showForm;
@@ -244,7 +246,8 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isLoading', 'itemList', 'quantidade']),
+    ...mapGetters(['isLoading']),
+    ...mapGettersTag(['itemList', 'quantidade']),
   },
   created() {
     this.itemAll();
