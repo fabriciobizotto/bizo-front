@@ -16849,7 +16849,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
 // }
 
 .table thead tr th {
-  font-size: 1.063rem;
+  font-size: 0.9rem;
 }
 
 .table .th-description {
@@ -19740,4 +19740,17 @@ Copyright (c) 2015 Daniel Eden
   .sidebar .navbar-form {
     display: none !important;
   }
+}
+
+.navbar .navbar-nav .nav-item .nav-link:hover {
+  background-color: #f2f2f2;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.navbar .navbar-nav .nav-item .nav-link.router-link-exact-active {
+  background-color: #f8f8f8;
+  font-weight: 600;
+  border-radius: 0.4rem;
+  cursor: pointer;
 }

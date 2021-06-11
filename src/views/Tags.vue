@@ -80,7 +80,7 @@
               >
                 <font-awesome-icon icon="plus-square" /> Nova
               </b-button>
-              <span class="h3 text-muted">Contas</span>
+              <span class="h3 text-muted">Tags</span>
             </div>
             <b-table
               :items="itemList"
@@ -177,12 +177,14 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex';
+import { mapGetters, mapActions, createNamespacedHelpers } from 'vuex';
+import store from '@/store';
+import { FETCH_TAGS } from '../store/actions.type';
 import Tag from '../models/tag';
 
-const { mapGetters } = createNamespacedHelpers('BaseModule');
-const { mapActions: mapActionsTag, mapGetters: mapGettersTag } =
-  createNamespacedHelpers('TagModule');
+const { mapGetters: mapGettersBase } = createNamespacedHelpers('BaseModule');
+// const { mapActions: mapActionsTag, mapGetters: mapGettersTag } =
+//   createNamespacedHelpers('TagModule');
 
 export default {
   name: 'TagPage',
@@ -204,9 +206,8 @@ export default {
     };
   },
   methods: {
-    ...mapActionsTag(['itemAll', 'updateItem', 'saveItem', 'deletarItem']),
+    ...mapActions([FETCH_TAGS, 'updateItem', 'saveItem', 'deletarItem']),
     show(mostrar = false) {
-      console.log(mostrar);
       this.showForm = mostrar ? mostrar : !this.showForm;
       this.$nextTick(() => {
         this.$refs.title.focus();
@@ -246,13 +247,21 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isLoading']),
-    ...mapGettersTag(['itemList', 'quantidade']),
+    ...mapGettersBase(['isLoading']),
+    ...mapGetters(['itemList', 'quantidade']),
   },
   created() {
-    this.itemAll();
-    // this.$store.dispatch('item/fetchAll')
+    // this.fetchTags();
+    store.dispatch(FETCH_TAGS);
   },
+  // beforeRouteEnter(to, from, next) {
+  //   Promise.all([
+  //     store.dispatch(FETCH_TAGS),
+  //     // this.$store.dispatch(FETCH_COMMENTS, to.params.slug)
+  //   ]).then(() => {
+  //     next();
+  //   });
+  // },
 };
 </script>
 

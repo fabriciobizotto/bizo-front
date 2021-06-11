@@ -19,10 +19,8 @@ const state = {
 };
 
 const getters = {
-  accountList: state => {
-    console.log(state);
-    return state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1));
-  },
+  accountList: state =>
+    state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1)),
   quantidade: state => state.accounts.length
 };
 

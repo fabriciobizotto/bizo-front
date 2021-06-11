@@ -9,6 +9,8 @@ import {
 } from '../mutations.types';
 import { SET_TAGS, UPDATE_TAG, ADD_TAG, REMOVE_TAG } from '../mutations.types';
 
+import { FETCH_TAGS } from '../actions.type';
+
 const state = {
   items: []
 };
@@ -19,7 +21,7 @@ const getters = {
 };
 
 const actions = {
-  async itemAll({ commit }) {
+  async [FETCH_TAGS]({ commit }) {
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
@@ -107,7 +109,7 @@ const mutations = {
   }
 };
 export default {
-  namespaced: true,
+  namespaced: false,
   state,
   getters,
   actions,

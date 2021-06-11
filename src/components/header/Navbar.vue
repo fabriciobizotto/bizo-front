@@ -7,7 +7,7 @@
       href
       class="navbar-brand"
       @click.prevent
-    >bezKoder</a>
+    >BizoCash</a>
     <div class="navbar-nav mr-auto">
       <li class="nav-item">
         <router-link
@@ -56,6 +56,7 @@
           class="nav-link"
         >Tag</router-link>
       </li>
+
     </div>
 
     <div
