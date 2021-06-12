@@ -1,3 +1,5 @@
+import { BASE_RESET } from '@/store/mutations.types';
+
 const state = {
   loading: false,
   message: {

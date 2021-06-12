@@ -55,7 +55,7 @@
                     variant="outline-dark"
                     size="sm"
                     class="mt-3 ml-1"
-                    @click="cancelEdit()"
+                    @click="escapeHandler()"
                     v-show="showForm"
                   >
                     <font-awesome-icon icon="minus-square" /> Cancelar
@@ -181,6 +181,7 @@ import { mapGetters, mapActions, createNamespacedHelpers } from 'vuex';
 import store from '@/store';
 import { FETCH_TAGS } from '../store/actions.type';
 import Tag from '../models/tag';
+import { Escapable } from '@/plugins/Escapable';
 
 const { mapGetters: mapGettersBase } = createNamespacedHelpers('BaseModule');
 // const { mapActions: mapActionsTag, mapGetters: mapGettersTag } =
@@ -188,6 +189,7 @@ const { mapGetters: mapGettersBase } = createNamespacedHelpers('BaseModule');
 
 export default {
   name: 'TagPage',
+  mixins: [Escapable],
   data() {
     return {
       edited: null,
@@ -241,7 +243,7 @@ export default {
       this.item = { ...item };
       this.show(true);
     },
-    cancelEdit() {
+    escapeHandler() {
       this.item = new Tag();
       this.show(false);
     },
@@ -251,7 +253,6 @@ export default {
     ...mapGetters(['itemList', 'quantidade']),
   },
   created() {
-    // this.fetchTags();
     store.dispatch(FETCH_TAGS);
   },
   // beforeRouteEnter(to, from, next) {

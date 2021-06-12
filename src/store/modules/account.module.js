@@ -1,5 +1,5 @@
-import AccountService from '../../services/account.service';
-import Account from '../../models/account';
+import AccountService from '@/services/account.service';
+import Account from '@/models/account';
 
 import {
   BASE_SET_LOADING,
@@ -14,18 +14,28 @@ import {
   REMOVE_ACCOUNT
 } from '../mutations.types';
 
+import {
+  FETCH_ACCOUNTS,
+  ACCOUNT_CREATE,
+  ACCOUNT_EDIT,
+  ACCOUNT_DELETE,
+  ACCOUNT_UPDATE
+} from '../actions.type';
+
 const state = {
-  accounts: []
+  accounts: [],
+  account: new Account()
 };
 
 const getters = {
+  account: state => state.account,
   accountList: state =>
     state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1)),
-  quantidade: state => state.accounts.length
+  accountListSize: state => state.accounts.length
 };
 
 const actions = {
-  async accountAll({ commit }) {
+  async [FETCH_ACCOUNTS]({ commit }) {
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
@@ -38,7 +48,7 @@ const actions = {
     }
   },
 
-  async updateAccount({ commit }, account) {
+  async [ACCOUNT_UPDATE]({ commit }, account) {
     commit(BASE_RESET, null, { root: true });
     commit(BASE_SET_LOADING, null, { root: true });
 
@@ -57,7 +67,7 @@ const actions = {
     }
   },
 
-  async saveAccount({ commit }, account) {
+  async [ACCOUNT_CREATE]({ commit }, account) {
     commit(BASE_RESET, null, { root: true });
     commit(BASE_SET_LOADING, null, { root: true });
 
@@ -77,7 +87,7 @@ const actions = {
     }
   },
 
-  async deletarConta({ commit }, account) {
+  async [ACCOUNT_DELETE]({ commit }, account) {
     commit(BASE_RESET, null, { root: true });
     commit(BASE_SET_LOADING, null, { root: true });
 
@@ -103,19 +113,24 @@ const mutations = {
   },
   [ADD_ACCOUNT](state, payload) {
     state.accounts.push(payload);
+    state.account = new Account();
   },
   [UPDATE_ACCOUNT](state, payload) {
     state.accounts = [
       ...state.accounts.filter(item => item.id !== payload.id),
       payload
     ];
+    state.account = new Account();
   },
   [REMOVE_ACCOUNT](state, payload) {
     state.accounts = state.accounts.filter(item => item.id != payload.id);
+  },
+  [ACCOUNT_EDIT](state, payload) {
+    state.account = payload ? payload : new Account();
   }
 };
 export default {
-  namespaced: true,
+  namespaced: false,
   state,
   getters,
   actions,

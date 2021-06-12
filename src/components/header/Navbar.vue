@@ -1,109 +1,104 @@
 <template>
   <b-navbar
-    type="dark"
-    variant="secondary"
+    toggleable="sm"
+    type="light"
+    variant="light"
   >
-    <a
-      href
-      class="navbar-brand"
+    <b-navbar-brand
       @click.prevent
-    >BizoCash</a>
-    <div class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <router-link
-          to="home"
-          class="nav-link"
-        >
-          <font-awesome-icon icon="home" /> Home
-        </router-link>
-      </li>
-      <li
-        v-if="showAdminBoard"
-        class="nav-item"
-      >
-        <router-link
-          to="admin"
-          class="nav-link"
-        >Admin Board</router-link>
-      </li>
-      <li
-        v-if="showModeratorBoard"
-        class="nav-item"
-      >
-        <router-link
-          to="moderator"
-          class="nav-link"
-        >Moderator Board</router-link>
-      </li>
-      <li class="nav-item">
-        <router-link
-          v-if="currentUser"
-          to="user"
-          class="nav-link"
-        >User</router-link>
-      </li>
-      <li class="nav-item">
-        <router-link
-          v-if="currentUser"
-          to="accounts"
-          class="nav-link"
-        >Account</router-link>
-      </li>
-      <li class="nav-item">
-        <router-link
-          v-if="currentUser"
-          to="tags"
-          class="nav-link"
-        >Tag</router-link>
-      </li>
+      to="home"
+    >BizoCash</b-navbar-brand>
 
-    </div>
+    <b-navbar-toggle target="navbar-toggle-collapse"></b-navbar-toggle>
 
-    <div
-      v-if="!currentUser"
-      class="navbar-nav ml-auto"
+    <b-collapse
+      id="navbar-toggle-collapse"
+      is-nav
     >
-      <li class="nav-item">
-        <router-link
+      <b-navbar-nav class="mr-auto">
+
+        <b-nav-item
+          to="admin"
+          v-if="showAdminBoard"
+        >
+          <font-awesome-icon icon="user-lock" /> Admin
+        </b-nav-item>
+
+        <b-nav-item
+          to="user"
+          v-if="currentUser"
+        >
+          <font-awesome-icon icon="user" /> User
+        </b-nav-item>
+
+        <b-nav-item
+          to="accounts"
+          v-if="currentUser"
+        >
+          <font-awesome-icon icon="file-invoice" /> Contas
+        </b-nav-item>
+
+        <b-nav-item
+          to="tags"
+          v-if="currentUser"
+        >
+          <font-awesome-icon icon="tags" /> Tags
+        </b-nav-item>
+
+      </b-navbar-nav>
+    </b-collapse>
+    <b-navbar-nav
+      class="ml-auto"
+      v-if="!currentUser"
+    >
+
+      <b-nav-item-dropdown right>
+        <template #button-content>
+          <em>User</em>
+        </template>
+
+        <b-dropdown-item
+          href
           to="register"
-          class="nav-link"
         >
           <font-awesome-icon icon="user-plus" />Sign Up
-        </router-link>
-      </li>
-      <li class="nav-item">
-        <router-link
+        </b-dropdown-item>
+
+        <b-dropdown-item
+          href
           to="login"
-          class="nav-link"
         >
           <font-awesome-icon icon="sign-in-alt" />Login
-        </router-link>
-      </li>
-    </div>
+        </b-dropdown-item>
 
-    <div
+      </b-nav-item-dropdown>
+    </b-navbar-nav>
+    <b-navbar-nav
+      class="ml-auto"
       v-if="currentUser"
-      class="navbar-nav ml-auto"
     >
-      <li class="nav-item">
-        <router-link
-          to="profile"
-          class="nav-link"
-        >
-          <font-awesome-icon icon="user" />
-          {{ currentUser.username }}
-        </router-link>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
+      <b-nav-item-dropdown right>
+        <template #button-content>
+          <em>{{ currentUser.email }}</em>
+        </template>
+
+        <b-dropdown-item
           href
           @click.prevent="logOut"
         >
-          <font-awesome-icon icon="sign-out-alt" />LogOut
-        </a>
-      </li>
-    </div>
+          <font-awesome-icon icon="sign-out-alt" /> LogOut
+        </b-dropdown-item>
+
+        <b-dropdown-item
+          to="profile"
+          href
+        >
+          <font-awesome-icon icon="user" />
+          Perfil
+        </b-dropdown-item>
+
+      </b-nav-item-dropdown>
+    </b-navbar-nav>
   </b-navbar>
 </template>
 
