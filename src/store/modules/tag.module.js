@@ -1,5 +1,5 @@
-import TagService from '../../services/tag.service';
-import Tag from '../../models/tag';
+import TagService from '@/services/tag.service';
+import Tag from '@/models/tag';
 
 import {
   BASE_SET_LOADING,
@@ -9,15 +9,23 @@ import {
 } from '../mutations.types';
 import { SET_TAGS, UPDATE_TAG, ADD_TAG, REMOVE_TAG } from '../mutations.types';
 
-import { FETCH_TAGS } from '../actions.type';
+import {
+  FETCH_TAGS,
+  TAG_CREATE,
+  TAG_EDIT,
+  TAG_DELETE,
+  TAG_UPDATE
+} from '../actions.type';
 
 const state = {
-  items: []
+  tags: [],
+  tag: new Tag()
 };
 
 const getters = {
-  itemList: state => state.items.sort((a, b) => (a.title > b.title ? 1 : -1)),
-  quantidade: state => state.items.length
+  tag: state => state.tag,
+  tagList: state => state.tags.sort((a, b) => (a.title > b.title ? 1 : -1)),
+  tagListSize: state => state.tags.length
 };
 
 const actions = {
@@ -34,16 +42,15 @@ const actions = {
     }
   },
 
-  async updateItem({ commit }, item) {
+  async [TAG_UPDATE]({ commit }, tag) {
     commit(BASE_RESET, null, { root: true });
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
-      // const data = { ...item, active: !item.active };
-      const response = await TagService.updateItem(item);
-      // console.log(response);
+      // const data = { ...tag, active: !tag.active };
+      const response = await TagService.updateItem(tag);
       commit(UPDATE_TAG, response.data);
-      commit(BASE_SET_SUCCESS, 'Conta atualizada com sucesso!', {
+      commit(BASE_SET_SUCCESS, 'Tag atualizada com sucesso!', {
         root: true
       });
     } catch (error) {
@@ -54,32 +61,35 @@ const actions = {
     }
   },
 
-  async saveItem({ commit }, item) {
+  async [TAG_CREATE]({ commit }, tag) {
+    commit(BASE_RESET, null, { root: true });
+    commit(BASE_SET_LOADING, null, { root: true });
+
     try {
-      commit(BASE_RESET, null, { root: true });
-      commit(BASE_SET_LOADING, null, { root: true });
-      // const data = { ...item, active: !item.active };
-      const response = await TagService.addItem(item);
-      commit(ADD_TAG, response.data);
-      commit(BASE_SET_SUCCESS, 'Conta criada com sucesso!', {
+      // const data = { ...tag, active: !tag.active };
+      const response = await TagService.addItem(tag);
+      state.tags.push(response.data);
+      state.tag = new Tag();
+      commit(BASE_SET_SUCCESS, 'Tag criada com sucesso!', {
         root: true
       });
     } catch (error) {
+      // console.log(error);
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
       commit(BASE_SET_LOADING, null, { root: true });
     }
   },
 
-  async deletarItem({ commit }, item) {
+  async [TAG_DELETE]({ commit }, tag) {
     commit(BASE_RESET, null, { root: true });
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
-      // const data = { ...item, active: !item.active };
-      const response = await TagService.deleteItem(item);
-      commit(REMOVE_TAG, item);
-      commit(BASE_SET_SUCCESS, 'Conta removida com sucesso!', {
+      // const data = { ...tag, active: !tag.active };
+      const response = await TagService.deleteItem(tag);
+      state.tags = state.tags.filter(item => item.id != tag.id);
+      commit(BASE_SET_SUCCESS, 'Tag removida com sucesso!', {
         root: true
       });
     } catch (error) {
@@ -93,19 +103,24 @@ const actions = {
 
 const mutations = {
   [SET_TAGS](state, payload) {
-    state.items = payload;
+    state.tags = payload;
   },
   [ADD_TAG](state, payload) {
-    state.items.push(payload);
+    state.tags.push(payload);
+    state.tag = new Tag();
   },
   [UPDATE_TAG](state, payload) {
-    state.items = [
-      ...state.items.filter(item => item.id !== payload.id),
+    state.tags = [
+      ...state.tags.filter(item => item.id !== payload.id),
       payload
     ];
+    state.tag = new Tag();
   },
   [REMOVE_TAG](state, payload) {
-    state.items = state.items.filter(item => item.id != payload.id);
+    state.tags = state.tags.filter(item => item.id != payload.id);
+  },
+  [TAG_EDIT](state, payload) {
+    state.tag = payload ? payload : new Tag();
   }
 };
 export default {
