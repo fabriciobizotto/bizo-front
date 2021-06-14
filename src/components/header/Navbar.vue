@@ -45,6 +45,13 @@
           <font-awesome-icon icon="tags" /> Tags
         </b-nav-item>
 
+        <b-nav-item
+          to="categories"
+          v-if="currentUser"
+        >
+          <font-awesome-icon icon="file-invoice" /> Categorias
+        </b-nav-item>
+
       </b-navbar-nav>
     </b-collapse>
     <b-navbar-nav

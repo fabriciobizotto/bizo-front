@@ -1,5 +1,5 @@
 <template>
-  <b-card footer-account="footer">
+  <b-card footer-category="footer">
     <b-table
       :items="lista"
       :fields="fields"
@@ -29,14 +29,14 @@
               @click="show()"
               v-show="!showForm"
             >
-              <font-awesome-icon icon="plus-square" /> Nova Conta
+              <font-awesome-icon icon="plus-square" /> Nova Categoria
             </b-button>
           </b-col>
           <b-col
             sm="6"
             class="text-right"
           >
-            Contas
+            Categorias
           </b-col>
         </b-row>
       </template>
@@ -109,40 +109,41 @@
 <script>
 import store from '@/store';
 import {
-  ACCOUNT_CREATE,
-  ACCOUNT_DELETE,
-  ACCOUNT_UPDATE,
+  CATEGORY_CREATE,
+  CATEGORY_DELETE,
+  CATEGORY_UPDATE,
   FETCH_CATEGORIES,
-  ACCOUNT_EDIT,
+  CATEGORY_EDIT,
 } from '@/store/actions.type';
 
 export default {
-  name: 'AccountTable',
+  name: 'CategoryTable',
   props: ['lista', 'rows', 'show', 'showForm'],
   data() {
     return {
       perPage: 5,
       currentPage: 1,
       filter: null,
-      filterOn: ['id', 'account_title', 'title'],
+      filterOn: ['id', 'category_title', 'title'],
       fields: [
-        { key: 'id', sortable: true, label: '#' },
-        { key: 'title', sortable: true, label: 'Conta' },
-        { key: 'active', sortable: true, label: 'Status' },
+        { key: 'id', sortable: false, label: '#' },
+        { key: 'category_title', sortable: true, label: '' },
+        { key: 'title', sortable: true, label: 'Categoria' },
+        { key: 'active', sortable: false, label: 'Status' },
         { key: 'actions', label: '' },
       ],
     };
   },
   methods: {
     editar(item) {
-      store.commit(ACCOUNT_EDIT, { ...item });
+      store.commit(CATEGORY_EDIT, { ...item });
       this.show(true);
     },
     updateItem(item) {
-      store.dispatch(ACCOUNT_UPDATE, item);
+      store.dispatch(CATEGORY_UPDATE, item);
     },
     excluir(item) {
-      store.dispatch(ACCOUNT_DELETE, item);
+      store.dispatch(CATEGORY_DELETE, item);
     },
   },
 };

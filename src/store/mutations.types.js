@@ -15,3 +15,10 @@ export const SET_TAGS = 'setTags';
 export const UPDATE_TAG = 'updateTag';
 export const ADD_TAG = 'addTag';
 export const REMOVE_TAG = 'removeTag';
+
+// Category
+export const SET_CATEGORIES = 'setCategories';
+export const SET_CATEGORY = 'setCategory';
+export const UPDATE_CATEGORY = 'updateCategory';
+export const ADD_CATEGORY = 'addCategory';
+export const REMOVE_CATEGORY = 'removeCategory';

@@ -64,6 +64,12 @@ export const router = new Router({
       name: 'tags',
       // lazy-loaded
       component: () => import('./views/Tags.vue')
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      // lazy-loaded
+      component: () => import('./views/Categories.vue')
     }
   ]
 });
