@@ -18,7 +18,7 @@
               id="category_id"
               autofocus
               v-model="category.category_id"
-              :options="options"
+              :options="categoryOptions"
               ref="category_id"
             />
           </b-form-group>
@@ -82,7 +82,7 @@ export default {
   mixins: [Escapable],
   props: ['show', 'showForm', 'submitted', 'submit'],
   computed: {
-    ...mapGetters(['category', 'options']),
+    ...mapGetters(['category', 'categoryOptions']),
   },
   methods: {
     escapeHandler() {

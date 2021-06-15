@@ -52,6 +52,13 @@
           <font-awesome-icon icon="file-invoice" /> Categorias
         </b-nav-item>
 
+        <b-nav-item
+          to="lancamentos"
+          v-if="currentUser"
+        >
+          <font-awesome-icon icon="file-invoice" /> +
+        </b-nav-item>
+
       </b-navbar-nav>
     </b-collapse>
     <b-navbar-nav

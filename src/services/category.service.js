@@ -9,6 +9,12 @@ class CategoryService {
     return axios.get(API_URL + PATH_NAME, { headers: authHeader() });
   }
 
+  getDisponiveis() {
+    return axios.get(API_URL + PATH_NAME + '/disponiveis', {
+      headers: authHeader()
+    });
+  }
+
   addItem(item) {
     const { title, active, category_id } = item;
 

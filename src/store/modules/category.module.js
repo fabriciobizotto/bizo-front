@@ -6,7 +6,8 @@ import {
   BASE_SET_SUCCESS,
   BASE_SET_ERROR,
   BASE_RESET,
-  SET_CATEGORY
+  SET_CATEGORY,
+  SET_CATEGORIES_DISPONIVEIS
 } from '../mutations.types';
 import {
   SET_CATEGORIES,
@@ -20,13 +21,15 @@ import {
   CATEGORY_CREATE,
   CATEGORY_EDIT,
   CATEGORY_DELETE,
-  CATEGORY_UPDATE
+  CATEGORY_UPDATE,
+  FETCH_CATEGORIES_DISPONIVEIS
 } from '../actions.type';
 
 const state = {
   categories: [],
+  categoriesDisponiveis: [],
   category: new Category(),
-  options: []
+  categoryOptions: []
 };
 
 const getters = {
@@ -35,7 +38,7 @@ const getters = {
   // categoryList: state =>
   //   state.categories.sort((a, b) => (a.title > b.title ? 1 : -1)),
   categoryListSize: state => state.categories.length,
-  options: state => {
+  categoryOptions: state => {
     let padrao = [
       { value: null, text: '--- Selecione uma Categoria Superior ---' }
     ];
@@ -44,7 +47,8 @@ const getters = {
         state.category.id == null ? c : c.id != state.category.id
       )
     );
-  }
+  },
+  categoriesDisponiveis: state => state.categoriesDisponiveis
 };
 
 const actions = {
@@ -54,6 +58,19 @@ const actions = {
     try {
       const response = await CategoryService.getAll();
       commit(SET_CATEGORIES, response.data);
+    } catch (error) {
+      commit(BASE_SET_ERROR, error, { root: true });
+    } finally {
+      commit(BASE_SET_LOADING, null, { root: true });
+    }
+  },
+
+  async [FETCH_CATEGORIES_DISPONIVEIS]({ commit }) {
+    commit(BASE_SET_LOADING, null, { root: true });
+
+    try {
+      const response = await CategoryService.getDisponiveis();
+      commit(SET_CATEGORIES_DISPONIVEIS, response.data);
     } catch (error) {
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
@@ -135,6 +152,9 @@ const mutations = {
     });
     console.log(state.categories);
   },
+  [SET_CATEGORIES_DISPONIVEIS](state, payload) {
+    state.categoriesDisponiveis = payload;
+  },
   [SET_CATEGORY](state, payload) {
     state.categories = [
       ...state.categories,
@@ -168,7 +188,7 @@ const mutations = {
   },
   [CATEGORY_EDIT](state, payload) {
     state.category = payload ? payload : new Category();
-    // state.options = state.categories.filter(c => c.id != c.category_id)
+    // state.categoryOptions = state.categories.filter(c => c.id != c.category_id)
   }
 };
 export default {

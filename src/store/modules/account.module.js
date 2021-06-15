@@ -9,6 +9,7 @@ import {
 } from '../mutations.types';
 import {
   SET_ACCOUNTS,
+  SET_ACCOUNTS_ACTIVE,
   UPDATE_ACCOUNT,
   ADD_ACCOUNT,
   REMOVE_ACCOUNT
@@ -16,6 +17,7 @@ import {
 
 import {
   FETCH_ACCOUNTS,
+  FETCH_ACCOUNTS_ACTIVE,
   ACCOUNT_CREATE,
   ACCOUNT_EDIT,
   ACCOUNT_DELETE,
@@ -24,6 +26,7 @@ import {
 
 const state = {
   accounts: [],
+  accountsActive: [],
   account: new Account()
 };
 
@@ -31,7 +34,8 @@ const getters = {
   account: state => state.account,
   accountList: state =>
     state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1)),
-  accountListSize: state => state.accounts.length
+  accountListSize: state => state.accounts.length,
+  accountsActive: state => state.accountsActive
 };
 
 const actions = {
@@ -41,6 +45,22 @@ const actions = {
     try {
       const response = await AccountService.getAccounts();
       commit(SET_ACCOUNTS, response.data);
+    } catch (error) {
+      commit(BASE_SET_ERROR, error, { root: true });
+    } finally {
+      commit(BASE_SET_LOADING, null, { root: true });
+    }
+  },
+
+  async [FETCH_ACCOUNTS_ACTIVE]({ commit }) {
+    commit(BASE_SET_LOADING, null, { root: true });
+
+    try {
+      const response = await AccountService.getAccounts();
+      commit(
+        SET_ACCOUNTS_ACTIVE,
+        response.data.filter(item => item.active == true)
+      );
     } catch (error) {
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
@@ -110,6 +130,9 @@ const actions = {
 const mutations = {
   [SET_ACCOUNTS](state, payload) {
     state.accounts = payload;
+  },
+  [SET_ACCOUNTS_ACTIVE](state, payload) {
+    state.accountsActive = payload;
   },
   [ADD_ACCOUNT](state, payload) {
     state.accounts.push(payload);

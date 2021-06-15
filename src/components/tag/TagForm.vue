@@ -12,7 +12,7 @@
         id="title"
         ref="title"
         class="mb-2 mr-sm-2 mb-sm-0 form-control"
-        placeholder="Ex. BB"
+        placeholder="Ex. Mercado"
         name="title"
         v-validate="'required|min:1|max:20'"
         v-model="tag.title"
