@@ -26,6 +26,13 @@
               v-validate="'required'"
             ></vue-simple-suggest>
 
+            <div
+              v-if="submitted && errors.has('categoria')"
+              class="text-danger"
+            >
+              {{errors.first('categoria')}}
+            </div>
+
           </b-form-group>
         </b-col>
 
@@ -98,7 +105,6 @@
               placeholder="Tag..."
               :typeahead-always-show="true"
               :typeahead-max-results="5"
-              v-validate="'required'"
               :limit="5"
               :only-existing-tags="true"
               :typeahead-style="'badges'"
@@ -117,7 +123,7 @@
       <b-card>
         <b-row>
           <b-col
-            sm="12"
+            sm="6"
             md="3"
             lg="3"
           >
@@ -145,7 +151,7 @@
 
           </b-col>
           <b-col
-            sm="12"
+            sm="6"
             md="3"
             lg="3"
           >
@@ -154,17 +160,27 @@
               label-for="vllcto"
             >
 
-              <b-form-input
-                id="vllcto"
-                data-vv-name="vllcto"
-                v-model="lancamento.vllcto"
-                :config="options"
-                v-validate="'required'"
-                placeholder="Valor"
-              >
+              <b-input-group>
+                <currency-input
+                  data-vv-name="valor"
+                  v-model="lancamento.vllcto"
+                  currency="BRL"
+                  locale="pt-BR"
+                  class="form-control"
+                  placeholder="Valor"
+                ></currency-input>
 
-              </b-form-input>
-
+                <b-input-group-append>
+                  <b-button
+                    data-vv-name=""
+                    size="sm"
+                    class="p-1"
+                    text="Despesa"
+                    @click="lancamento.despesa = !lancamento.despesa"
+                    :variant="lancamento.despesa ? 'danger' : 'success'"
+                  >{{lancamento.despesa ? 'Despesa' : 'Receita'}}</b-button>
+                </b-input-group-append>
+              </b-input-group>
             </b-form-group>
           </b-col>
 
@@ -173,13 +189,20 @@
             md="2"
             lg="2"
           >
-            <b-label>Está Pago?</b-label>
-            <b-form-checkbox
-              switch
-              v-model="pago"
-              @change="setPago"
+            <b-form-group
+              label="Está Pago?"
+              label-for="pago"
             >
-            </b-form-checkbox>
+              <b-form-checkbox
+                data-vv-name=""
+                id="pago"
+                switch
+                v-model="pago"
+                @change="setPago"
+                class="success"
+              >
+              </b-form-checkbox>
+            </b-form-group>
           </b-col>
 
           <b-col
@@ -187,57 +210,20 @@
             md="4"
             lg="4"
           >
-            <b-label>Pagar Automaticamente?</b-label>
-            <b-form-checkbox
-              switch
-              v-model="lancamento.pagar"
-              class=""
-            />
+            <b-form-group
+              label="Pagar Automaticamente?"
+              label-for="pagar"
+            >
+              <b-form-checkbox
+                data-vv-name=""
+                id="pagar"
+                switch
+                v-model="lancamento.pagar"
+                class=""
+              />
+            </b-form-group>
           </b-col>
 
-          <!-- <b-col
-            sm="12"
-            md="6"
-            lg="4"
-          >
-            <b-input-group>
-              <b-form-input
-                id="vllcto"
-                data-vv-name="vllcto"
-                v-model="lancamento.vllcto"
-                :config="options"
-                v-validate="'required'"
-                placeholder="Valor"
-              >
-
-              </b-form-input>
-              <b-input-group-prepend is-text>
-                <b-form-checkbox
-                  switch
-                  v-model="pago"
-                  @change="setPago"
-                >
-                </b-form-checkbox>
-              </b-input-group-prepend>
-              <b-form-input
-                id="vlpgto"
-                data-vv-name="vlpgto"
-                v-model="lancamento.vlpgto"
-                :config="options"
-                v-validate="'required'"
-                placeholder="Valor Pago"
-              >
-
-              </b-form-input>
-
-            </b-input-group>
-            <div
-              v-if="submitted && errors.has('dtlcto')"
-              class="text-danger"
-            >
-              {{errors.first('dtlcto')}}
-            </div>
-          </b-col> -->
         </b-row>
 
       </b-card>
@@ -273,18 +259,21 @@ import '@voerro/vue-tagsinput/dist/style.css';
 import { Escapable } from '@/plugins/Escapable';
 import { mapGetters } from 'vuex';
 import store from '@/store';
+
 import {
   LANCAMENTO_EDIT,
   FETCH_CATEGORIES_DISPONIVEIS,
   FETCH_ACCOUNTS_ACTIVE,
   FETCH_TAGS_ACTIVE,
 } from '@/store/actions.type';
-import moment from 'moment';
 
 export default {
   name: 'LancamentoForm',
   mixins: [Escapable],
-  components: { VueSimpleSuggest, 'tags-input': VoerroTagsInput },
+  components: {
+    VueSimpleSuggest,
+    'tags-input': VoerroTagsInput,
+  },
   props: ['show', 'showForm', 'submitted', 'submit'],
   computed: {
     ...mapGetters([
@@ -299,7 +288,7 @@ export default {
       pago: false,
       options: {
         format: 'DD/MM/YYYY',
-        useCurrent: false,
+        useCurrent: true,
       },
     };
   },
@@ -307,8 +296,6 @@ export default {
     escapeHandler() {
       store.commit(LANCAMENTO_EDIT, null);
       this.show();
-
-      //   console.log(this.$refs);
     },
     setPago() {
       if (this.pago) {
@@ -319,13 +306,6 @@ export default {
         this.lancamento.vlpgto = null;
       }
     },
-    // onContext(ctx) {
-    //   // The date formatted in the locale, or the `label-no-date-selected` string
-    //   this.formatted = ctx.selectedFormatted;
-    //   // The following will be an empty string until a valid date is entered
-    //   console.log(ctx);
-    //   this.lancamento.dtlcto = ctx.selectedYMD;
-    // },
     // formatDate(value, event) {
     //   return moment(value).format('DD/MM/YYYY ');
     // },

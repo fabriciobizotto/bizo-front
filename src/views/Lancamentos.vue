@@ -63,18 +63,21 @@ export default {
         console.log(isValid);
         console.log(this.lancamento);
         if (isValid) {
-          //     const metodo = this.lancamento.id
-          //       ? LANCAMENTO_UPDATE
-          //       : LANCAMENTO_CREATE;
-          //     store.dispatch(metodo, this.lancamento).then(
-          //       () => {
-          //         this.showForm = false;
-          //         this.submitted = false;
-          //       },
-          //       (error) => {
-          //         this.showForm = true;
-          //       }
-          //     );
+          this.lancamento.category_id = this.lancamento.category.id;
+          this.lancamento.account_id = this.lancamento.account.id;
+
+          const metodo = this.lancamento.id
+            ? LANCAMENTO_UPDATE
+            : LANCAMENTO_CREATE;
+          store.dispatch(metodo, this.lancamento).then(
+            () => {
+              this.showForm = false;
+              this.submitted = false;
+            },
+            (error) => {
+              this.showForm = true;
+            }
+          );
         }
       });
     },

@@ -12,7 +12,8 @@ export default class Lancamento {
     user_id,
     category,
     account,
-    tags
+    despesa,
+    tags_ids
   ) {
     (this.id = id),
       (this.title = title),
@@ -20,12 +21,13 @@ export default class Lancamento {
       (this.dtpgto = dtpgto),
       (this.vllcto = vllcto),
       (this.vlpgto = vlpgto),
-      (this.pagar = pagar),
+      (this.pagar = pagar || false),
       (this.category_id = category_id),
       (this.account_id = account_id),
       (this.user_id = user_id),
       (this.category = category),
       (this.account = account),
-      (this.tags = tags);
+      (this.despesa = despesa || true),
+      (this.tags_ids = tags_ids);
   }
 }

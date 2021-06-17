@@ -3,6 +3,7 @@ import App from './App.vue';
 import { router } from './router';
 import store from './store';
 import datePicker from 'vue-bootstrap-datetimepicker';
+import VueCurrencyInput from 'vue-currency-input';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -31,6 +32,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(datePicker);
+Vue.use(VueCurrencyInput);
 
 new Vue({
   router,

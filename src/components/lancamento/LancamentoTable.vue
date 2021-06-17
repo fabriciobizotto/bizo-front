@@ -35,11 +35,19 @@
         {{(row.item.dtpgto || row.item.dtlcto) | toDate}}
       </template>
 
+      <template #cell(tags)="{item}">
+        <h5>
+          <b-badge variant="info">{{item.tags.length || 0}}</b-badge>
+        </h5>
+      </template>
+
       <template #cell(vllcto)="row">
+        <span :class="row.item.despesa ? 'text-danger' : 'text-primary'">{{(row.item.vlpgto || row.item.vllcto) | toCurrency}}</span>
         <b-link
           v-if="row.item.dtpgto !== null"
           @click="pagar(row.item)"
-          class="mr-2"
+          class="ml-2"
+          title="Cancelar Pagamento"
         >
           <font-awesome-icon
             icon="check-double"
@@ -49,18 +57,24 @@
         <b-link
           v-if="row.item.dtpgto == null"
           @click="pagar(row.item)"
-          class="mr-2"
+          class="ml-2"
+          title="Pagar"
         >
           <font-awesome-icon
             icon="check"
             class="text-success"
           />
         </b-link>
-        {{(row.item.vlpgto || row.item.vllcto) | toCurrency}}
+
       </template>
 
       <template #row-details="row">
         <em>{{row.item.title}}</em>
+        <span
+          class="float-right"
+          v-html="getTagTitle(row.item.tags)"
+        >
+        </span>
       </template>
 
       <template #cell(title)="row">
@@ -72,12 +86,15 @@
 
       <template #cell(actions)="row">
         <b-row class="float-right mr-0">
-          <b-form-checkbox
-            @change="automatizarPagamento(row.item)"
-            v-model="row.item.pagar"
-            class="mr-1"
-          >
-          </b-form-checkbox>
+          <span title="Pagar Automaticamente na data de vencimento?">
+            <b-form-checkbox
+              @change="automatizarPagamento(row.item)"
+              v-model="row.item.pagar"
+              class="mr-1"
+              switch
+            >
+            </b-form-checkbox>
+          </span>
           <b-link
             @click="editar(row.item)"
             class="mr-2"
@@ -171,8 +188,10 @@ export default {
           key: 'vllcto',
           sortable: false,
           label: 'Valor',
+          class: 'text-right',
           // formatter: 'formatCurrency',
         },
+        { key: 'tags', sortable: false, label: 'Tags', class: 'text-center' },
         // { key: 'pagar', sortable: false, label: 'Pagar?' },
         { key: 'actions', label: '' },
       ],
@@ -201,6 +220,11 @@ export default {
     },
     formatDate(value) {
       return moment(value).format('DD/MM/YYYY');
+    },
+    getTagTitle(tags) {
+      return tags
+        .map((item) => `<span class="badge badge-info">${item.title}</span>`)
+        .join(' ');
     },
   },
   filters: {

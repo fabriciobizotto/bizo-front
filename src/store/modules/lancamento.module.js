@@ -87,6 +87,7 @@ const actions = {
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
+      console.log(lancamento);
       // const data = { ...lancamento, active: !lancamento.active };
       const response = await LancamentoService.addItem(lancamento);
       state.lancamentos.push(response.data);
@@ -145,6 +146,7 @@ const mutations = {
     state.lancamentos = state.lancamentos.filter(item => item.id != payload.id);
   },
   [LANCAMENTO_EDIT](state, payload) {
+    console.log(payload);
     state.lancamento = payload ? payload : new Lancamento();
   }
 };
