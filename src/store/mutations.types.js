@@ -13,6 +13,7 @@ export const REMOVE_ACCOUNT = 'removeAccount';
 
 // Tag
 export const SET_TAGS = 'setTags';
+export const SET_TAGS_ACTIVE = 'setTagsActive';
 export const UPDATE_TAG = 'updateTag';
 export const ADD_TAG = 'addTag';
 export const REMOVE_TAG = 'removeTag';

@@ -76,6 +76,12 @@ export const router = new Router({
       name: 'lancamentos',
       // lazy-loaded
       component: () => import('./views/Lancamentos.vue')
+    },
+    {
+      path: '/lancamentos/new',
+      name: 'lancamentos',
+      // lazy-loaded
+      component: () => import('./views/Lancamentos.vue')
     }
   ]
 });

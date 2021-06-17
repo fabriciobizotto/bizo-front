@@ -4017,7 +4017,7 @@ input[type="button"].btn-block {
   position: relative;
   display: block;
   min-height: 1.5rem;
-  padding-left: 1.5rem;
+  // padding-left: 1.5rem;
 }
 
 .custom-control-inline {
@@ -4055,39 +4055,39 @@ input[type="button"].btn-block {
   background-color: #e9ecef;
 }
 
-.custom-control-label {
-  position: unset;
-  margin-bottom: 0;
-  vertical-align: baseline;
-}
+// .custom-control-label {
+//   position: unset;
+//   margin-bottom: 0;
+//   vertical-align: baseline;
+// }
 
-.custom-control-label::before {
-  position: absolute;
-  top: 0.25rem;
-  left: 0;
-  display: block;
-  width: 1rem;
-  height: 1rem;
-  pointer-events: none;
-  content: "";
-  user-select: none;
-  // background-color: #dee2e6;
-  box-shadow: inset 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
-}
+// .custom-control-label::before {
+//   position: absolute;
+//   top: 0.25rem;
+//   left: 0;
+//   display: block;
+//   width: 1rem;
+//   height: 1rem;
+//   pointer-events: none;
+//   content: "";
+//   user-select: none;
+//   // background-color: #dee2e6;
+//   box-shadow: inset 0 0.25rem 0.25rem rgba(0, 0, 0, 0.1);
+// }
 
-.custom-control-label::after {
-  position: absolute;
-  top: 0.25rem;
-  left: 0rem;
-  display: block;
-  width: 1rem;
-  height: 1rem;
-  content: "";
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 50% 50%;
-  // background-color: $success;
-}
+// .custom-control-label::after {
+//   position: absolute;
+//   top: 0.25rem;
+//   left: 0rem;
+//   display: block;
+//   width: 1rem;
+//   height: 1rem;
+//   content: "";
+//   background-repeat: no-repeat;
+//   background-position: center center;
+//   background-size: 50% 50%;
+//   // background-color: $success;
+// }
 
 .custom-checkbox .custom-control-label::before {
   border-radius: 0rem;
@@ -19769,4 +19769,10 @@ Copyright (c) 2015 Daniel Eden
 
 table.b-table[aria-busy=true] {
   opacity: 0.6;
+}
+
+.vue-simple-suggest.designed .input-wrapper input {
+  padding: 0.3rem 0.5rem !important;
+  border-radius: 0 !important;
+  
 }

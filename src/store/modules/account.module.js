@@ -35,7 +35,16 @@ const getters = {
   accountList: state =>
     state.accounts.sort((a, b) => (a.title > b.title ? 1 : -1)),
   accountListSize: state => state.accounts.length,
-  accountsActive: state => state.accountsActive
+  // accountsActive: state => state.accountsActive
+  accountsActive: state => text => {
+    if (text) {
+      return state.accountsActive.filter(item =>
+        item.title.toLowerCase().includes(text.toLowerCase())
+      );
+    } else {
+      return state.accountsActive;
+    }
+  }
 };
 
 const actions = {

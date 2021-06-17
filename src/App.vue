@@ -4,7 +4,7 @@
       <Navbar />
       <Messages />
     </header>
-    
+
     <b-container fluid="lg">
       <router-view />
     </b-container>
@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Messages from './components/messages.vue'
-import Navbar from './components/header/Navbar.vue'
+import Messages from './components/messages.vue';
+import Navbar from './components/header/Navbar.vue';
 export default {
-  components: {Messages, Navbar}
+  components: { Messages, Navbar },
 };
 </script>

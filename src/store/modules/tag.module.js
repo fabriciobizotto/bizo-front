@@ -5,12 +5,14 @@ import {
   BASE_SET_LOADING,
   BASE_SET_SUCCESS,
   BASE_SET_ERROR,
-  BASE_RESET
+  BASE_RESET,
+  SET_TAGS_ACTIVE
 } from '../mutations.types';
 import { SET_TAGS, UPDATE_TAG, ADD_TAG, REMOVE_TAG } from '../mutations.types';
 
 import {
   FETCH_TAGS,
+  FETCH_TAGS_ACTIVE,
   TAG_CREATE,
   TAG_EDIT,
   TAG_DELETE,
@@ -19,13 +21,15 @@ import {
 
 const state = {
   tags: [],
+  tagsActive: [],
   tag: new Tag()
 };
 
 const getters = {
   tag: state => state.tag,
   tagList: state => state.tags.sort((a, b) => (a.title > b.title ? 1 : -1)),
-  tagListSize: state => state.tags.length
+  tagListSize: state => state.tags.length,
+  tagsActive: state => state.tagsActive.filter(item => item.active == true)
 };
 
 const actions = {
@@ -39,6 +43,15 @@ const actions = {
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
       commit(BASE_SET_LOADING, null, { root: true });
+    }
+  },
+
+  async [FETCH_TAGS_ACTIVE]({ commit }) {
+    try {
+      const response = await TagService.getAll();
+      commit(SET_TAGS_ACTIVE, response.data);
+    } catch (error) {
+      commit(BASE_SET_ERROR, error, { root: true });
     }
   },
 
@@ -104,6 +117,9 @@ const actions = {
 const mutations = {
   [SET_TAGS](state, payload) {
     state.tags = payload;
+  },
+  [SET_TAGS_ACTIVE](state, payload) {
+    state.tagsActive = payload;
   },
   [ADD_TAG](state, payload) {
     state.tags.push(payload);

@@ -1,4 +1,5 @@
 export const FETCH_TAGS = 'fetchTags';
+export const FETCH_TAGS_ACTIVE = 'fetchTagsActive';
 export const TAG_CREATE = 'tagCreate';
 export const TAG_UPDATE = 'tagUpdate';
 export const TAG_DELETE = 'tagDelete';
