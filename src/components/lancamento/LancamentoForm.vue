@@ -6,6 +6,7 @@
   >
     <b-form
       name="form"
+      ref="form"
       @submit.prevent="submit"
     >
       <b-row>
@@ -24,6 +25,7 @@
               value-attribute="id"
               :list="categoriesDisponiveis"
               v-validate="'required'"
+              autofocus
             ></vue-simple-suggest>
 
             <div
@@ -41,7 +43,6 @@
             label="Conta"
             label-for="account_id"
           >
-
             <vue-simple-suggest
               id="conta"
               ref="account"
@@ -168,6 +169,7 @@
                   locale="pt-BR"
                   class="form-control"
                   placeholder="Valor"
+                  v-validate="'required'"
                 ></currency-input>
 
                 <b-input-group-append>
@@ -180,7 +182,14 @@
                     :variant="lancamento.despesa ? 'danger' : 'success'"
                   >{{lancamento.despesa ? 'Despesa' : 'Receita'}}</b-button>
                 </b-input-group-append>
+
               </b-input-group>
+              <div
+                v-if="submitted && errors.has('valor')"
+                class="text-danger"
+              >
+                {{errors.first('valor')}}
+              </div>
             </b-form-group>
           </b-col>
 

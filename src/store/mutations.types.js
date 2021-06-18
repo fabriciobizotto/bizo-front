@@ -32,3 +32,4 @@ export const SET_LANCAMENTO = 'setLancamento';
 export const UPDATE_LANCAMENTO = 'updateLancamento';
 export const ADD_LANCAMENTO = 'addLancamento';
 export const REMOVE_LANCAMENTO = 'removeLancamento';
+export const SET_LANCAMENTO_PARAMS = 'setLancamentoParams';

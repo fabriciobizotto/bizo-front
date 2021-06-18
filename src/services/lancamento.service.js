@@ -5,8 +5,11 @@ import authHeader from './auth-header';
 const PATH_NAME = 'lancamentos';
 
 class TagService {
-  getAll() {
-    return axios.get(API_URL + PATH_NAME, { headers: authHeader() });
+  getAll(params) {
+    return axios.get(API_URL + PATH_NAME, {
+      params,
+      headers: authHeader()
+    });
   }
 
   addItem(item) {

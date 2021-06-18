@@ -51,7 +51,7 @@ export default {
           store.commit(BASE_RESET, null, { root: true });
         }
         this.$nextTick(() => {
-          // this.$children[0].$children[0].$refs.title.focus();
+          // console.log(this.$children[0].$children[0].$refs);
         });
       } catch (error) {
         console.log(error);
@@ -87,7 +87,7 @@ export default {
     ...mapGetters(['lancamento', 'lancamentoList', 'lancamentoListSize']),
   },
   created() {
-    store.dispatch(FETCH_LANCAMENTOS);
+    store.dispatch(FETCH_LANCAMENTOS, { ano: 2021, mes: 6 });
     // this.$store.dispatch('lancamento/fetchAll')
   },
 };

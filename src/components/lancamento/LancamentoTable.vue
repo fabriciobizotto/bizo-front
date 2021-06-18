@@ -1,5 +1,6 @@
 <template>
   <b-card footer-lancamento="footer">
+
     <div class="mb-4">
       <b-button
         variant="outline-success"
@@ -10,8 +11,31 @@
       >
         <font-awesome-icon icon="plus-square" /> Nova
       </b-button>
-      <span class="h3 text-muted">Lancamentos</span>
+      <b-button
+        variant="light"
+        @click="getLancamentosAtuais()"
+      >
+        <font-awesome-icon
+          icon="sync"
+          class="fa-sm text-primary"
+        /> Lançamentos
+      </b-button>
     </div>
+
+    <b-button-group
+      size="sm"
+      class="nav nav-tabs nav-justified p-0"
+    >
+      <b-button
+        class="p-1"
+        v-for="mes in meses"
+        :key="mes.key"
+        :disabled="mes.key == currentMes"
+        :variant="mes.key == currentMes ? 'success' : 'secondary'"
+        @click="getLancamentosMes(mes.key)"
+      >{{mes.title}}</b-button>
+    </b-button-group>
+
     <b-table
       :items="lista"
       :fields="fields"
@@ -119,7 +143,27 @@
 
     <template #footer>
       <b-row>
-        <b-col cols="6">
+        <b-col cols="4">
+          <b-button-group size="sm">
+            <b-button
+              variant="dark"
+              @click="getLancamentosPrev()"
+            >
+              <font-awesome-icon icon="arrow-left" />
+            </b-button>
+            <b-button
+              disabled
+              variant="success"
+            >{{currentAno}}</b-button>
+            <b-button
+              variant="dark"
+              @click="getLancamentosNext()"
+            >
+              <font-awesome-icon icon="arrow-right" />
+            </b-button>
+          </b-button-group>
+        </b-col>
+        <b-col cols="4">
           <b-pagination
             size="sm"
             v-model="currentPage"
@@ -128,7 +172,7 @@
             aria-controls="my-table"
           ></b-pagination>
         </b-col>
-        <b-col cols="6">
+        <b-col cols="4">
           <b-form-group
             label=""
             label-for="filter-input"
@@ -159,6 +203,7 @@ import {
   LANCAMENTO_DELETE,
   LANCAMENTO_UPDATE,
   LANCAMENTO_EDIT,
+  FETCH_LANCAMENTOS,
 } from '@/store/actions.type';
 
 export default {
@@ -195,7 +240,28 @@ export default {
         // { key: 'pagar', sortable: false, label: 'Pagar?' },
         { key: 'actions', label: '' },
       ],
+      currentMes: store.getters.lancamentoParams['mes'],
+      currentAno: store.getters.lancamentoParams['ano'],
+      meses: [
+        { key: 1, title: 'Janeiro' },
+        { key: 2, title: 'Fevereiro' },
+        { key: 3, title: 'Março' },
+        { key: 4, title: 'Abril' },
+        { key: 5, title: 'Maio' },
+        { key: 6, title: 'Junho' },
+        { key: 7, title: 'Julho' },
+        { key: 8, title: 'Agosto' },
+        { key: 9, title: 'Setembro' },
+        { key: 10, title: 'Outubro' },
+        { key: 11, title: 'Novembro' },
+        { key: 12, title: 'Dezembro' },
+      ],
     };
+  },
+  computed: {
+    // activeMes() {
+    //   return this.meses.filter((item) => item.key == this.currentMes);
+    // },
   },
   methods: {
     automatizarPagamento(item) {
@@ -225,6 +291,35 @@ export default {
       return tags
         .map((item) => `<span class="badge badge-info">${item.title}</span>`)
         .join(' ');
+    },
+    getLancamentosAtuais() {
+      this.currentMes = new Date().getMonth() + 1;
+      this.currentAno = new Date().getFullYear();
+      store.dispatch(FETCH_LANCAMENTOS, {
+        ano: this.currentAno,
+        mes: this.currentMes,
+      });
+    },
+    getLancamentosMes(mes) {
+      this.currentMes = mes;
+      store.dispatch(FETCH_LANCAMENTOS, {
+        ano: this.currentAno,
+        mes: this.currentMes,
+      });
+    },
+    getLancamentosPrev() {
+      this.currentAno -= 1;
+      store.dispatch(FETCH_LANCAMENTOS, {
+        ano: this.currentAno,
+        mes: this.currentMes,
+      });
+    },
+    getLancamentosNext() {
+      this.currentAno += 1;
+      store.dispatch(FETCH_LANCAMENTOS, {
+        ano: this.currentAno,
+        mes: this.currentMes,
+      });
     },
   },
   filters: {

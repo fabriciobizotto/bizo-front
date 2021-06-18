@@ -11,7 +11,8 @@ import {
   SET_LANCAMENTOS,
   UPDATE_LANCAMENTO,
   ADD_LANCAMENTO,
-  REMOVE_LANCAMENTO
+  REMOVE_LANCAMENTO,
+  SET_LANCAMENTO_PARAMS
 } from '../mutations.types';
 
 import {
@@ -25,23 +26,36 @@ import {
 
 const state = {
   lancamentos: [],
-  lancamento: new Lancamento()
+  lancamento: new Lancamento(),
+  lancamentoParams: {
+    ano: new Date().getFullYear(),
+    mes: new Date().getMonth() + 1
+  }
 };
 
 const getters = {
   lancamento: state => state.lancamento,
   lancamentoList: state =>
-    state.lancamentos.sort((a, b) => (a.title > b.title ? 1 : -1)),
-  lancamentoListSize: state => state.lancamentos.length
+    state.lancamentos.filter(item => {
+      let anomes = state.lancamentoParams['ano']
+        .toString()
+        .concat('-')
+        .concat(state.lancamentoParams['mes'].toString().padStart(2, '0'));
+
+      return item.dtlcto.substring(0, 7) == anomes;
+    }),
+  lancamentoListSize: state => state.lancamentos.length,
+  lancamentoParams: state => state.lancamentoParams
 };
 
 const actions = {
-  async [FETCH_LANCAMENTOS]({ commit }) {
+  async [FETCH_LANCAMENTOS]({ commit }, params) {
     commit(BASE_SET_LOADING, null, { root: true });
 
     try {
-      const response = await LancamentoService.getAll();
+      const response = await LancamentoService.getAll(params);
       commit(SET_LANCAMENTOS, response.data);
+      commit(SET_LANCAMENTO_PARAMS, params);
     } catch (error) {
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
@@ -148,6 +162,9 @@ const mutations = {
   [LANCAMENTO_EDIT](state, payload) {
     console.log(payload);
     state.lancamento = payload ? payload : new Lancamento();
+  },
+  [SET_LANCAMENTO_PARAMS](state, payload) {
+    state.lancamentoParams = payload;
   }
 };
 export default {
