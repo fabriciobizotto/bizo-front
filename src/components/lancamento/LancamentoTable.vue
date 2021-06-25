@@ -9,7 +9,7 @@
         @click="show()"
         v-show="!showForm"
       >
-        <font-awesome-icon icon="plus-square" /> Nova
+        <font-awesome-icon icon="plus-square" /> Adicionar
       </b-button>
       <b-button
         variant="light"

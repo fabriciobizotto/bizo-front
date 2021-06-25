@@ -2,11 +2,17 @@
   <b-alert
     class="border-0"
     :variant="message.error ? 'danger' : 'success'"
-    :show="message.text != null"
+    :show="message.errors.length > 0"
     fade
     dismissible
   >
-    {{message.text}}
+    <small
+      class="mb-0"
+      v-for="(item, index) in message.errors"
+      :key="index"
+    >
+      {{item}}
+    </small>
   </b-alert>
 </template>
 

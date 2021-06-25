@@ -131,7 +131,6 @@ const actions = {
         root: true
       });
     } catch (error) {
-      // console.log(error);
       commit(BASE_SET_ERROR, error, { root: true });
     } finally {
       commit(BASE_SET_LOADING, null, { root: true });

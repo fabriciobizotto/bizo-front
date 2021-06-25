@@ -5,7 +5,7 @@ const state = {
   message: {
     showDismissibleAlert: false,
     error: false,
-    text: null
+    errors: []
   }
 };
 const getters = {
@@ -17,7 +17,7 @@ const mutations = {
   reset: state => {
     state.message.error = null;
     state.message.showDismissibleAlert = false;
-    state.message.text = null;
+    state.message.errors = null;
   },
   setLoading: state => {
     state.loading = !state.loading;
@@ -25,7 +25,12 @@ const mutations = {
   setError(state, payload) {
     state.message.error = true;
     state.message.showDismissibleAlert = true;
-    state.message.text = payload;
+
+    if (payload.response) {
+      state.message.errors = payload.response.data.errors;
+    } else {
+      state.message.errors = payload;
+    }
   },
   setSuccess(state, payload) {
     state.message.error = false;
